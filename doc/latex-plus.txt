@@ -1,0 +1,19 @@
+* latex-plus * Helpful mappings for editing Latex files.
+
+
+================================================================================
+CONTENTS                                       *latex-plus-contents*
+
+    1. Usage.....................|latex-plus-usage|
+    2. Mappings..................|latex-plus-mappings|
+    
+================================================================================
+
+1. *latex-plus-usage*
+
+This plugin just contains helpful mappings at the current time. 
+
+
+2. *latex-plus-mappings* 
+
+Here is the list of the current mappings. 
