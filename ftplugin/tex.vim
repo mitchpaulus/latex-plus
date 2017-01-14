@@ -44,3 +44,19 @@ function! s:CreateCommandLatex()
 endfunction
 
 xnoremap <leader>trv :<c-u>call <SID>CreateCommandLatex()<cr>
+
+" These mappings add an item element when one is above it. 
+inoremap <cr> <cr><esc>:<c-u>call <SID>AddItemCommand()<cr>
+nnoremap o o<esc>:<c-u>call <SID>AddItemCommand()<cr>
+
+function! s:AddItemCommand()
+    let currentLine = line('.')
+    let previousLineText = getline(currentLine-1)
+
+    if match(previousLineText,'^\s*\\item') == 0
+        execute "normal! i    \\item "
+    endif
+    startinsert!
+endfunction
+
+
