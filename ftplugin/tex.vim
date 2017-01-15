@@ -59,4 +59,29 @@ function! s:AddItemCommand()
     startinsert!
 endfunction
 
+nnoremap <leader>cd :!lualatex %
+
+function! s:IsTabularEnvironment(lineNumber)
+    let saveCursor = getcurpos()
+
+    call cursor(a:lineNumber, 0)
+
+    let beginLinePrevious = search('\\begin{tabular}',"bnW")
+    if beginLinePrevious == 0
+        call setpos('.',saveCursor)
+        return v:false
+    endif
+    
+    let endLinePrevious = search('\\end{tabular}', "bnW")
+    if endLinePrevious >= beginLinePrevious 
+        call setpos('.',saveCursor)
+        return v:false
+    endif
+
+    call setpos('.',saveCursor)
+    return v:true
+endfunction
+
+
+
 
