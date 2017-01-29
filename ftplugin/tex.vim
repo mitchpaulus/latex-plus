@@ -16,6 +16,41 @@ inoremap \[ \[\]<esc>hi
 " Insert new equation environment
 nnoremap \teq i\begin{equation}<cr><cr>\end{equation}<esc>ki<tab>
 
+function! TikzPlotComplete(findstart, base)
+    if a:findstart 
+        let line = getline('.')
+        let matchcol = match(line, '\a')
+        return matchcol
+    else
+        " find items related to base
+        "
+        if s:IsEnvironment(line('.'), 'axis')
+            let possibleOptions = ["xtick",
+                        \ "ytick",
+                        \ "ylabel",
+                        \ "xlabel",
+                        \ "align",
+                        \ "col sep",
+                        \ "ymin",
+                        \ "ymax",
+                        \ "xmin",
+                        \ "xmax", 
+                        \ "only marks",
+                        \ "axis lines"] 
+
+            let results = []
+            for possibleOption in possibleOptions
+                if match(possibleOption, a:base) > -1
+                    call add(results, possibleOption)
+                endif 
+            endfor
+            return results
+        endif
+        return []
+    endif
+endfunction
+
+
 " Pulls out the current visual selection as a new command.
 function! s:CreateCommandLatex()
     " Store the current value of register s in case you want to keep it. 
@@ -26,7 +61,7 @@ function! s:CreateCommandLatex()
     call inputrestore()
 
     let temp = @s 
-    
+
     norm! gv"sy
 
     execute "normal! gvs\\" . newCommandName 
@@ -61,18 +96,18 @@ endfunction
 
 nnoremap <leader>cd :!lualatex %
 
-function! s:IsTabularEnvironment(lineNumber)
+function! s:IsEnvironment(lineNumber, environment)
     let saveCursor = getcurpos()
 
     call cursor(a:lineNumber, 0)
 
-    let beginLinePrevious = search('\\begin{tabular}',"bnW")
+    let beginLinePrevious = search('\\begin{' . a:environment . '}',"bnW")
     if beginLinePrevious == 0
         call setpos('.',saveCursor)
         return v:false
     endif
-    
-    let endLinePrevious = search('\\end{tabular}', "bnW")
+
+    let endLinePrevious = search('\\end{' . a:environment . '}', "bnW")
     if endLinePrevious >= beginLinePrevious 
         call setpos('.',saveCursor)
         return v:false
