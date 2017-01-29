@@ -24,11 +24,13 @@ function! TikzPlotComplete(findstart, base)
     else
         " find items related to base
         "
-        if s:IsEnvironment(line('.'), 'axis')
+        if IsEnvironment(line('.'), 'axis')
             let possibleOptions = ["xtick",
                         \ "ytick",
                         \ "ylabel",
+                        \ "ylabel style",
                         \ "xlabel",
+                        \ "xlabel style",
                         \ "align",
                         \ "col sep",
                         \ "ymin",
@@ -36,7 +38,10 @@ function! TikzPlotComplete(findstart, base)
                         \ "xmin",
                         \ "xmax", 
                         \ "only marks",
-                        \ "axis lines"] 
+                        \ "axis lines",
+                        \ '\addlegendentry',
+                        \ "legend pos",
+                        \ ] 
 
             let results = []
             for possibleOption in possibleOptions
@@ -96,25 +101,25 @@ endfunction
 
 nnoremap <leader>cd :!lualatex %
 
-function! s:IsEnvironment(lineNumber, environment)
-    let saveCursor = getcurpos()
+function! IsEnvironment(lineNumber, environment)
+    let saveCursor = getpos('.')
 
     call cursor(a:lineNumber, 0)
 
     let beginLinePrevious = search('\\begin{' . a:environment . '}',"bnW")
     if beginLinePrevious == 0
         call setpos('.',saveCursor)
-        return v:false
+        return 0
     endif
 
     let endLinePrevious = search('\\end{' . a:environment . '}', "bnW")
     if endLinePrevious >= beginLinePrevious 
         call setpos('.',saveCursor)
-        return v:false
+        return 0
     endif
 
     call setpos('.',saveCursor)
-    return v:true
+    return 1
 endfunction
 
 
