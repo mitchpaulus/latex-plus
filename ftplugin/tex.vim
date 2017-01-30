@@ -1,3 +1,104 @@
+let s:axisLineOptions = { "optionBase": "axislines=", "options" : [
+            \ "left",
+            \ "box",
+            \ "middle",
+            \ "center",
+            \ "right",
+            \ "none", ] }
+
+
+let s:colorOptions = { "optionBase": "color=", "options": [
+            \ "red",
+            \ "green",
+            \ "blue",
+            \ "cyan",
+            \ "magenta",
+            \ "yellow",
+            \ "black",
+            \ "gray",
+            \ "white",
+            \ "darkgray",
+            \ "lightgray",
+            \ "brown",
+            \ "lime",
+            \ "olive",
+            \ "orange",
+            \ "pink",
+            \ "purple",
+            \ "teal",
+            \ "violet" ] }
+
+let s:linestyles = [
+            \ "solid",
+            \ "dotted",
+            \ "densely dotted",
+            \ "loosely dotted",
+            \ "dashed",
+            \ "densely dashed",
+            \ "loosely dashed",
+            \ "dashdotted",
+            \ "densely dashdotted",
+            \ "loosely dashdotted",
+            \ "dashdotdotted",
+            \ "densely dashdotdotted",
+            \ "loosely dashdotdotted",
+            \ ]
+            
+let s:markoptions = {"optionBase": "mark=", "options": [
+            \ "*",
+            \ "x",
+            \ "+",
+            \ "-",
+            \ "|",
+            \ "o",
+            \ "asterisk",
+            \ "star",
+            \ "pointed star",
+            \ "oplus",
+            \ "oplus*",
+            \ "otimes",
+            \ "otimes*",
+            \ "square",
+            \ "square*",
+            \ "triangle",
+            \ "triangle*",
+            \ "diamond",
+            \ "diamond*",
+            \ "halfsquare*",
+            \ "halfsquare right*",
+            \ "halfsquare left*",
+            \ "Mercedes star",
+            \ "Mercedes star flipped",
+            \ "halfcircle",
+            \ "halfcircle*",
+            \ "pentagon",
+            \ "pentagon*",
+            \ "ball",
+            \ "text",
+            \ "cube",
+            \ "cube*",
+            \ ]
+            \ }
+
+let s:colSepOptions = {"optionBase": "colsep=", "options": [
+            \ "space",
+            \ "tab",
+            \ "comma",
+            \ "colon",
+            \ "semicolon",
+            \ "braces",
+            \ "&",
+            \ "ampersand",
+            \ ]
+            \ }
+
+let s:gridOptions =  {"optionBase": "grid=", "options": [
+            \ "major",
+            \ "both",
+            \ "none",
+            \ "minor"
+            \ ]
+            \ }
 " Quickly wrap selection (in visual mode) or current 
 " WORD (in normal mode) as italic.
 vnoremap <leader>ti di\textit{<c-r>"}<esc>
@@ -9,6 +110,18 @@ nnoremap <leader>tb diWi\textbf{<c-r>"}<esc>
 
 " Auto close inline equation.
 inoremap \( \(\)<esc>hi
+
+nnoremap <leader>tpac :<c-u>call <SID>FlipTikzOmniComplete()<cr>
+
+function! s:FlipTikzOmniComplete()
+    if &omnifunc !~# "TikzPlotComplete"
+        let g:TikzPlotOmniCompleteBackup = &omnifunc
+        let &omnifunc="TikzPlotComplete"
+    else 
+        let &omnifunc = g:TikzPlotOmniCompleteBackup
+    endif
+    echo "omnifunc is now " . &omnifunc
+endfunction
 
 " Auto close line wise equation.
 inoremap \[ \[\]<esc>hi
@@ -41,10 +154,40 @@ function! TikzPlotComplete(findstart, base)
                         \ "axis lines",
                         \ '\addlegendentry',
                         \ "legend pos",
+                        \ "grid style",
+                        \ "minor grid style",
+                        \ "major grid style",
+                        \ "grid",
+                        \ "minor xtick",
+                        \ "minor ytick",
+                        \ "mark",
+                        \ "xmajorgrids",
+                        \ "ymajorgrids",
+                        \ "zmajorgrids",
+                        \ "xminorgrids",
+                        \ "yminorgrids",
+                        \ "zminorgrids",
+                        \ "width",
+                        \ "height",
                         \ ] 
+
+            let possibleOptions = possibleOptions + s:linestyles
+
+            let equalTypeOptions = [s:markoptions, s:colSepOptions, s:gridOptions, s:colorOptions, s:axisLineOptions]
+
+            let trimmedBase = substitute(a:base,'\s\+',"","g")
+            for equalTypeOption in equalTypeOptions
+                if trimmedBase ==? equalTypeOption["optionBase"]
+                    return map(equalTypeOption["options"], 'a:base . v:val . ","')
+                endif
+            endfor
 
             let results = []
             for possibleOption in possibleOptions
+                if trimmedBase ==? "line"  || trimmedBase ==? "linetype" || trimmedBase ==? "linestyle"
+                    return s:linestyles
+                endif
+                
                 if match(possibleOption, a:base) > -1
                     call add(results, possibleOption)
                 endif 
