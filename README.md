@@ -9,7 +9,7 @@ Tikz Pgfplots.
 
 It also adds a few other helpful mappings/funcitons including
 * adding \item if previous line contains \item
-* italicize WORD under cursor with <leader>ti 
-* bold WORD under cursor with <leader>tb 
-* auto closing equations \(\) and \[\]
+* italicize WORD under cursor with \<leader\>ti 
+* bold WORD under cursor with \<leader\>tb 
+* auto closing equations \\(\\) and \\[\\]
 * ability to pull out selected text into new Latex command
