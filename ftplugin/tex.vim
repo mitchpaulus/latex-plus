@@ -137,7 +137,7 @@ nnoremap <leader>tb diWi\textbf{<c-r>"}<esc>
 " Auto close inline equation.
 inoremap \( \(\)<esc>hi
 
-nnoremap <leader>tpac :<c-u>call <SID>FlipTikzOmniComplete()<cr>
+nnoremap <leader>tp :<c-u>call <SID>FlipTikzOmniComplete()<cr>
 
 function! s:FlipTikzOmniComplete()
     if &omnifunc !~# "TikzPlotComplete"
@@ -218,6 +218,8 @@ function! TikzPlotComplete(findstart, base)
                         \ "xtick align",
                         \ "ytick align",
                         \ "tick align",
+                        \ "color",
+                        \ "legend",
                         \ ] 
 
             let possibleOptions = possibleOptions + s:linestyles
