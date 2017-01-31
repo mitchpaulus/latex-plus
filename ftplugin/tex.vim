@@ -1,3 +1,10 @@
+let s:scaledTickOptionList = ["true","false","10:<e>","real:<num>",'manual{}{}']
+
+let s:scaledTickOptions  = {"optionBase": "scaledticks=",  "options": s:scaledTickOptionList}
+let s:scaledxTickOptions = {"optionBase": "scaledxticks=", "options": s:scaledTickOptionList}
+let s:scaledyTickOptions = {"optionBase": "scaledyticks=", "options": s:scaledTickOptionList}
+
+
 let s:tickAlignOptionList = ["inside","center","outside"]
 
 let s:xtickAlignOptions = {"optionBase": "xtickalign=", "options": s:tickAlignOptionList}
@@ -220,6 +227,9 @@ function! TikzPlotComplete(findstart, base)
                         \ "tick align",
                         \ "color",
                         \ "legend",
+                        \ "scaled ticks",
+                        \ "scaled x ticks",
+                        \ "scaled y ticks",
                         \ ] 
 
             let possibleOptions = possibleOptions + s:linestyles
@@ -235,6 +245,9 @@ function! TikzPlotComplete(findstart, base)
                         \ s:xtickAlignOptions,
                         \ s:ytickAlignOptions,
                         \ s:tickAlignOptions,
+                        \ s:scaledTickOptions ,
+                        \ s:scaledxTickOptions,
+                        \ s:scaledyTickOptions,
                         \ ]
 
             let trimmedBase = substitute(a:base,'\s\+',"","g")
