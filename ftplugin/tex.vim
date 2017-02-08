@@ -1,3 +1,5 @@
+let s:siunitxOptions = ["group-seperator","group-minimum-digits","per-mode"]
+
 let s:scaledTickOptionList = ["true","false","10:<e>","real:<num>",'manual{}{}']
 
 let s:scaledTickOptions  = {"optionBase": "scaledticks=",  "options": s:scaledTickOptionList}
@@ -163,8 +165,21 @@ inoremap \[ \[\]<esc>hi
 nnoremap \teq i\begin{equation}<cr><cr>\end{equation}<esc>ki<tab>
 
 function! TikzPlotComplete(findstart, base)
+
+    let line = getline('.')
+    let sisetupCommandMatch =  matchend(line, '\s*\\sisetup{') 
+
     if a:findstart 
-        let line = getline('.')
+        if sisetupCommandMatch > -1 
+            let lastCommaCol = match(line, '.*\zs,')
+
+            if lastCommaCol > -1
+                return match(line, '\a', lastCommaCol + 1)
+            else
+                "echo 'base was found' . sisetupCommandMatch
+                return sisetupCommandMatch
+            endif
+        endif
 
         " let start = col('.')
         let lastCommaCol = match(line, '.*\zs,')
@@ -180,6 +195,9 @@ function! TikzPlotComplete(findstart, base)
     else
         " find items related to base
         "
+        if sisetupCommandMatch > -1
+            return s:siunitxOptions
+        endif
         if IsEnvironment(line('.'), 'axis')
             let possibleOptions = ["xtick",
                         \ "ytick",
