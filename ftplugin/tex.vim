@@ -146,6 +146,8 @@ nnoremap <leader>tb diWi\textbf{<c-r>"}<esc>
 " Auto close inline equation.
 inoremap \( \(\)<esc>hi
 
+inoremap _ _{}<esc>i
+
 nnoremap <leader>tp :<c-u>call <SID>FlipTikzOmniComplete()<cr>
 
 function! s:FlipTikzOmniComplete()
